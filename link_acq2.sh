@@ -1,14 +1,17 @@
 #!/bin/bash
 
-list=1
+cd /data/url
 
-for list in *; do
-# 詳細部分を抽出し上書き保存とバックアップ                                                                                                  2 16, 0:44:32
-sed -n -i'.bak'  '/<div id="side_room_plan">/,/<\/div>/p' "${list}"
+#list=1
+#for list in *; do
+# 詳細部分を抽出し上書き保存とバックアップ
+ls -F /data/url | grep -v .txt | grep -v .csv | while read line
+do
+sed -n -i'.bak'  '/<div id="side_room_plan">/,/<\/div>/p' "${line}"
 # タブ除去
-cat "${list}" | tr -d '\t' > "${list}".txt
+cat "${line}" | tr -d '\t' > "${line}".txt
 # URLのみ取得
-sed -n -i'.bak' 's/^.*href="\([^"]*\)".*$/\1/p' "${list}.txt"
+sed -n -i'.bak' 's/^.*href="\([^"]*\)".*$/\1/p' "${line}.txt"
 # 重複削除
-uniq "${list}.txt" > "${list}".csv
+uniq "${line}.txt" > "${line}".csv
 done
